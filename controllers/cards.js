@@ -5,27 +5,27 @@ const BAD_REQUEST_ERROR = http2.constants.HTTP_STATUS_BAD_REQUEST; // 400
 const NOT_FOUND_ERROR = http2.constants.HTTP_STATUS_NOT_FOUND; // 404
 const DEFAULT_ERROR = http2.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR;
 
-// class ValidationError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = "ValidationError";
-//     this.statusCode = BAD_REQUEST_ERROR;
-//   }
-// }
-// class NotFoundError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = "NotFoundError";
-//     this.statusCode = NOT_FOUND_ERROR;
-//   }
-// }
-// class DefaultError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = "DefaultError";
-//     this.statusCode = DEFAULT_ERROR;
-//   }
-// }
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+    this.statusCode = BAD_REQUEST_ERROR;
+  }
+}
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = NOT_FOUND_ERROR;
+  }
+}
+class DefaultError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DefaultError";
+    this.statusCode = DEFAULT_ERROR;
+  }
+}
 
 
 
@@ -37,19 +37,18 @@ const getCards = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-  .then(card => res.status(200).send({ data: card }))
-  .catch((err) => {
-    if (err.name === "CastError") {
-      res.status(BAD_REQUEST_ERROR)
-        .send({ message: 'Переданы некорректные данные при создании карточки.' })
-    } else {
-      res.status(DEFAULT_ERROR)
-        .send({ message: 'На сервере произошла ошибка' })
-    }
+    .then(card => res.status(200).send({ data: card }))
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(BAD_REQUEST_ERROR)
+          .send({ message: 'Переданы некорректные данные при создании карточки.' })
+      } else {
+        res.status(DEFAULT_ERROR)
+          .send({ message: 'На сервере произошла ошибка' })
+      }
 })
 };
 
@@ -57,9 +56,10 @@ const deleteCard = (req, res) => {
 
   Card.findByIdAndRemove(req.params.cardId)
   .then(card => res.status(200).send({ data: card }))
-  .catch(err => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена.' }))
+  .catch(err => res.status(BAD_REQUEST_ERROR).send({ message: 'Карточка с указанным _id не найдена.' }))
 }
 
+// Добавление лайка с несуществующим в БД id карточки сделать
 const putLike = (req, res) => {
 
   Card.findByIdAndUpdate(
@@ -69,10 +69,10 @@ const putLike = (req, res) => {
   )
   .then(card => res.status(200).send({ data: card}))
   .catch((err) => {
-    if (err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       res.status(BAD_REQUEST_ERROR)
         .send({ message: 'Переданы некорректные данные для постановки лайка. ' })
-    } else if (err.name === "NotFoundError") {
+    } else if (err.name === 'NotFoundError') {
       res.status(NOT_FOUND_ERROR)
         .send({ message: 'Передан несуществующий _id карточки.' })
     } else if (DEFAULT_ERROR) {
@@ -81,6 +81,7 @@ const putLike = (req, res) => {
 })
 }
 
+// Удаление лайка с несуществующим в БД id карточки сделать
 const deleteLike = (req, res) => {
 
   Card.findByIdAndUpdate(
@@ -90,7 +91,7 @@ const deleteLike = (req, res) => {
   )
   .then(card => res.status(200).send({ data: card}))
   .catch((err) => {
-    if (err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       res.status(BAD_REQUEST_ERROR)
         .send({ message: 'Переданы некорректные данные для снятия лайка. ' })
     } else if (err.name === "NotFoundError") {

@@ -8,7 +8,7 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
     validate: {
       validator(v) {
-        return v > 2 && v <= 30;
+        return 2<v<=30;
       },
       message: 'Поле Название должно содержать от 2 до 30 символов!',
     }
@@ -21,7 +21,7 @@ const cardSchema = new mongoose.Schema({
       validator(v) {
         v => validator.isURL(v, { protocols: ['http','https','ftp'], require_tld: true, require_protocol: true });
       },
-        message: 'Аватар должен быть ссылкой (URL)!',
+        message: 'Ссылка должна быть URL!',
       }
   },
 
