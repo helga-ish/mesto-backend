@@ -55,11 +55,12 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
 
   Card.findByIdAndRemove(req.params.cardId)
+  .orFail(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным _id не найдена.'}))
   .then(card => res.status(200).send({ data: card }))
-  .catch(err => res.status(BAD_REQUEST_ERROR).send({ message: 'Карточка с указанным _id не найдена.' }))
+  .catch(err => res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при поиске карточки.' }))
 }
 
-// Добавление лайка с несуществующим в БД id карточки сделать
+
 const putLike = (req, res) => {
 
   Card.findByIdAndUpdate(
@@ -79,7 +80,6 @@ const putLike = (req, res) => {
 })
 }
 
-// Удаление лайка с несуществующим в БД id карточки сделать
 const deleteLike = (req, res) => {
 
   Card.findByIdAndUpdate(
