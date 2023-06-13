@@ -36,12 +36,13 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
 
   User.findById(req.params.userId)
+  .orFail(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден.'}))
   .then(user => res.status(200).send({ data: user }))
   .catch((err) => {
-    if (err.name === 'NotFoundError') {
+    if (err.name === 'CastError') {
       return res
-        .status(NOT_FOUND_ERROR)
-        .send({ message: 'Пользователь по указанному _id не найден.' })
+        .status(BAD_REQUEST_ERROR)
+        .send({ message: 'Переданы некорректные данные при поиске пользователя.' })
     } else if (err.name === 'DefaultError') {
       return res
         .status(DEFAULT_ERROR)

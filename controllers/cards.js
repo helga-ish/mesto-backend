@@ -67,14 +67,12 @@ const putLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+  .orFail(() => res.status(NOT_FOUND_ERROR).send({ message: 'Передан несуществующий _id карточки.'}))
   .then(card => res.status(200).send({ data: card}))
   .catch((err) => {
-    if (err.name === 'ValidationError') {
+    if (err.name === 'CastError') {
       res.status(BAD_REQUEST_ERROR)
         .send({ message: 'Переданы некорректные данные для постановки лайка. ' })
-    } else if (err.name === 'NotFoundError') {
-      res.status(NOT_FOUND_ERROR)
-        .send({ message: 'Передан несуществующий _id карточки.' })
     } else if (DEFAULT_ERROR) {
       return res.send({ message: 'На сервере произошла ошибка' })
     }
@@ -89,14 +87,12 @@ const deleteLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+  .orFail(() => res.status(NOT_FOUND_ERROR).send({ message: 'Передан несуществующий _id карточки.'}))
   .then(card => res.status(200).send({ data: card}))
   .catch((err) => {
-    if (err.name === 'ValidationError') {
+    if (err.name === 'CastError') {
       res.status(BAD_REQUEST_ERROR)
         .send({ message: 'Переданы некорректные данные для снятия лайка. ' })
-    } else if (err.name === "NotFoundError") {
-      res.status(NOT_FOUND_ERROR)
-        .send({ message: 'Передан несуществующий _id карточки.' })
     } else if (DEFAULT_ERROR) {
       return res.send({ message: 'На сервере произошла ошибка' })
     }
