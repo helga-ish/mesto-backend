@@ -35,8 +35,8 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
 
-  User.findById(req.user._id)
-  .then(user => res.send({ data: user }))
+  User.findById(req.params.userId)
+  .then(user => res.status(200).send({ data: user }))
   .catch((err) => {
     if (err.name === 'NotFoundError') {
       return res
@@ -73,8 +73,12 @@ const updateProfile = (req, res) => {
 
   const currentUser = req.user._id;
 
-  User.findByIdAndUpdate(currentUser, { name, about }, { new: true })
-  .then(user => res.send({ data: user }))
+  User.findByIdAndUpdate(
+    currentUser,
+    { name, about },
+    { new: true,
+      runValidators: true })
+  .then(user => res.status(200).send({ data: user }))
   .catch((err) => {
     if (err.name === 'ValidationError') {
       return res
@@ -97,8 +101,12 @@ const updateAvatar = (req, res) => {
 
   const currentUser = req.user._id;
 
-  User.findByIdAndUpdate(currentUser, { avatar }, { new: true })
-  .then(user => res.send({ data: user }))
+  User.findByIdAndUpdate(
+    currentUser,
+    { avatar },
+    { new: true,
+    runValidators: true })
+  .then(user => res.status(200).send({ data: user }))
   .catch((err) => {
     if (err.name === 'ValidationError') {
       return res
