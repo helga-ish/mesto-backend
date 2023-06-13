@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 30,
     validate: {
       validator(v) {
-        return v > 2 && v <= 30;
+        return 2<v<=30;
       },
       message: 'Поле О себе должно содержать от 2 до 30 символов!',
     }
