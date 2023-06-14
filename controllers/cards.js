@@ -34,18 +34,17 @@ const deleteCard = (req, res) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Карточка с указанным _id не найдена.' });
       } else if (err.name === 'CastError') {
         return res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при поиске карточки.' });
-      } else {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -59,17 +58,16 @@ const putLike = (req, res) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные для постановки лайка. ' });
-      } else {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -83,17 +81,16 @@ const deleteLike = (req, res) => {
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res
+        res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные для снятия лайка. ' });
-      } else {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 

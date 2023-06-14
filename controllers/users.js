@@ -24,11 +24,10 @@ const getUserById = (req, res) => {
         return res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при поиске пользователя.' });
-      } else if (err.name === 'DefaultError') {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -39,14 +38,13 @@ const createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
+        res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при создании пользователя.' });
-      } else if (err.name === 'DefaultError') {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -67,18 +65,17 @@ const updateProfile = (req, res) => {
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
+        res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else if (err.name === 'DocumentNotFoundError') {
         return res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Пользователь по указанному _id не найден.' });
-      } else if (err.name === 'DefaultError') {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -99,18 +96,17 @@ const updateAvatar = (req, res) => {
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
+        res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else if (err.name === 'DocumentNotFoundError') {
         return res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Пользователь по указанному _id не найден.' });
-      } else if (err.name === 'DefaultError') {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: 'На сервере произошла ошибка' });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 module.exports = {

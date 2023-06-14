@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { validator } = require('express');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,7 +19,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        v => validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
+        validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
       },
       message: 'Аватар должен быть ссылкой (URL)!',
     },

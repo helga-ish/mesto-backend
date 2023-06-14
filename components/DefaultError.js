@@ -1,9 +1,9 @@
-const { DEFAULT_ERROR } = require('../constants/constants');
+// const { DEFAULT_ERROR } = require('../constants/constants');
 
-class DefaultError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'DefaultError';
-    this.statusCode = DEFAULT_ERROR;
-  }
-}
+// class DefaultError extends Error {
+//   constructor(message) {
+//     super(message);
+//     this.name = 'DefaultError';
+//     this.statusCode = DEFAULT_ERROR;
+//   }
+// }

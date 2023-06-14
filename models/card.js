@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { validator } = require('express');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,12 +11,12 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: {
-      validator(v) {
-        v => validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
-      },
-      message: 'Ссылка должна быть URL!',
-    },
+    validate: validator.isURL({
+      message: 'Аватар должен быть ссылкой (URL)!',
+      protocols: ['http', 'https', 'ftp'],
+      require_tld: true,
+      require_protocol: true,
+    }),
   },
 
   owner: {
