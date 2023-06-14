@@ -18,8 +18,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
+      validator() {
+        v => validator.isURL(v, {
+          protocols: ['http', 'https', 'ftp'],
+          require_tld: true,
+          require_protocol: true,
+        });
       },
       message: 'Аватар должен быть ссылкой (URL)!',
     },

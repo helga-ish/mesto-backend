@@ -38,7 +38,7 @@ const createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
@@ -95,14 +95,14 @@ const updateAvatar = (req, res) => {
     .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'DocumentNotFoundError') {
         res
-          .status(BAD_REQUEST_ERROR)
-          .send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-      } else if (err.name === 'DocumentNotFoundError') {
-        return res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.name === 'ValidationError') {
+        return res
+          .status(BAD_REQUEST_ERROR)
+          .send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       }
       return res
         .status(DEFAULT_ERROR)
