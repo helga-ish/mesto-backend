@@ -11,12 +11,12 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: validator.isURL({
+    validate: {
+      validator(v) {
+        validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
+      },
       message: 'Аватар должен быть ссылкой (URL)!',
-      protocols: ['http', 'https', 'ftp'],
-      require_tld: true,
-      require_protocol: true,
-    }),
+    },
   },
 
   owner: {
