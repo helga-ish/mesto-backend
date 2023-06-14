@@ -6,23 +6,16 @@ const cardSchema = new mongoose.Schema({
     required: true,
     minlength: 2,
     maxlength: 30,
-    validate: {
-      validator(v) {
-        return 2<v<=30;
-      },
-      message: 'Поле Название должно содержать от 2 до 30 символов!',
-    }
   },
-
   link: {
     type: String,
     required: true,
     validate: {
       validator(v) {
-        v => validator.isURL(v, { protocols: ['http','https','ftp'], require_tld: true, require_protocol: true });
+        v => validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true });
       },
-        message: 'Ссылка должна быть URL!',
-      }
+      message: 'Ссылка должна быть URL!',
+    },
   },
 
   owner: {
@@ -38,7 +31,7 @@ const cardSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
 module.exports = mongoose.model('card', cardSchema);
