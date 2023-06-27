@@ -34,12 +34,11 @@ const deleteCard = (req, res) => {
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ForbiddenError') {
+      if (err.code === 403) {
         res
           .status(FORBIDDEN_ERROR)
           .send({ message: 'У Вас нет доступа.' });
-      }
-      if (err.name === 'DocumentNotFoundError') {
+      } else if (err.name === 'DocumentNotFoundError') {
         res
           .status(NOT_FOUND_ERROR)
           .send({ message: 'Карточка с указанным _id не найдена.' });

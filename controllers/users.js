@@ -7,6 +7,7 @@ const {
   NOT_FOUND_ERROR,
   DEFAULT_ERROR,
   UNAUTHORIZED_ERROR,
+  CONFLICT_ERROR,
 } = require('../constants/constants');
 
 const login = (req, res) => {
@@ -22,7 +23,7 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      if (err.name === 'UnauthorizedError') {
+      if (err.code === 401) {
         res
           .status(UNAUTHORIZED_ERROR)
           .send({ message: 'Пользователя не существует.' });
@@ -30,10 +31,14 @@ const login = (req, res) => {
         res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при поиске пользователя.' });
+      } else if (err.name === 'DocumentNotFoundError') {
+        return res
+          .status(NOT_FOUND_ERROR)
+          .send({ message: 'Пользователь не найден.' });
       }
       return res
-        .status(NOT_FOUND_ERROR)
-        .send({ message: 'Пользователь не найден.' });
+        .status(DEFAULT_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -80,7 +85,11 @@ const createUser = (req, res) => {
       avatar: user.avatar,
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        res
+          .status(CONFLICT_ERROR)
+          .send({ message: 'Пользователь с таким email уже существует.' });
+      } else if (err.name === 'ValidationError') {
         return res
           .status(BAD_REQUEST_ERROR)
           .send({ message: 'Переданы некорректные данные при создании пользователя.' });
