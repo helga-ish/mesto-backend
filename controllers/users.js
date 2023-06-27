@@ -20,10 +20,10 @@ const login = (req, res) => {
       );
       res.send({ token });
     })
-    .catch((err) => {
+    .catch(() => {
       res
         .status(NOT_FOUND_ERROR)
-        .send({ message: err.message });
+        .send({ message: 'Пользователь не найден.' });
     });
 };
 
@@ -71,7 +71,7 @@ const createUser = (req, res) => {
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: 'На сервере произошла ошибка' });
+        .send({ message: 'На сервере произошла ошибка.' });
     });
 };
 

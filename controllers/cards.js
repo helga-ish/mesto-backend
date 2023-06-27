@@ -3,6 +3,7 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   DEFAULT_ERROR,
+  FORBIDDEN_ERROR,
 } = require('../constants/constants');
 
 const getCards = (req, res) => {
@@ -33,6 +34,11 @@ const deleteCard = (req, res) => {
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
+      if (err.name === 'ForbiddenError') {
+        res
+          .status(FORBIDDEN_ERROR)
+          .send({ message: 'У Вас нет доступа.' });
+      }
       if (err.name === 'DocumentNotFoundError') {
         res
           .status(NOT_FOUND_ERROR)
