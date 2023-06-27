@@ -69,35 +69,78 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
+  // const {
+  //   email, password, name, about, avatar,
+  // } = req.body;
+
+  // User.create({
+  //   email, password, name, about, avatar,
+  // })
+  // bcrypt.hash(req.body.password, 10)
+  //   .then((hash) => User.create(
+  //     {
+  //       email: req.body.email,
+  //       password: hash,
+  //       name: req.body.name,
+  //       about: req.body.about,
+  //       avatar: req.body.avatar,
+  //     },
+  //   ))
+  //   .then((user) => res.send({
+  //     _id: user._id,
+  //     email: user.email,
+  //     name: user.name,
+  //     about: user.about,
+  //     avatar: user.avatar,
+  //   }))
+  //   .catch((err) => {
+  //     if (err.code === 11000) {
+  //       res
+  //         .status(CONFLICT_ERROR)
+  //         .send({ message: 'Пользователь с таким email уже существует.' });
+  //     } else if (err.name === 'ValidationError') {
+  //       return res
+  //         .status(BAD_REQUEST_ERROR)
+  //         .send({ message: 'Переданы некорректные данные при создании пользователя.' });
+  //     }
+  //     return res
+  //       .status(DEFAULT_ERROR)
+  //       .send({ message: 'На сервере произошла ошибка.' });
+  //   });
   bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create({
-      name: req.body.name,
-      about: req.body.about,
-      avatar: req.body.avatar,
-      email: req.body.email,
-      password: hash,
-    }))
-    .then((user) => res.send({
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-    }))
-    .catch((err) => {
-      if (err.code === 11000) {
-        res
-          .status(CONFLICT_ERROR)
-          .send({ message: 'Пользователь с таким email уже существует.' });
-      } else if (err.name === 'ValidationError') {
-        return res
-          .status(BAD_REQUEST_ERROR)
-          .send({ message: 'Переданы некорректные данные при создании пользователя.' });
-      }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: 'На сервере произошла ошибка.' });
-    });
+    .then((hash) => {
+      User.create(
+        {
+          email: req.body.email,
+          password: hash,
+          name: req.body.name,
+          about: req.body.about,
+          avatar: req.body.avatar,
+        },
+      )
+        .then((user) => res.send({
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            res
+              .status(CONFLICT_ERROR)
+              .send({ message: 'Пользователь с таким email уже существует.' });
+          } else if (err.name === 'ValidationError') {
+            return res
+              .status(BAD_REQUEST_ERROR)
+              .send({ message: 'Переданы некорректные данные при создании пользователя.' });
+          }
+          return res
+            .status(DEFAULT_ERROR)
+            .send({ message: 'На сервере произошла ошибка.' });
+        });
+    })
+    .catch(() => res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя.' }));
 };
 
 const updateProfile = (req, res) => {
