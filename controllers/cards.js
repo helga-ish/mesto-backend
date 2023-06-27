@@ -29,7 +29,7 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId, { select: req.owner === req.user._id })
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
