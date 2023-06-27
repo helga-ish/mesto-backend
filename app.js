@@ -38,20 +38,20 @@ app.use('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена.' });
 });
 
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
+// app.use((err, req, res, next) => {
+//   res.status(err.statusCode).send({ message: err.message });
 
-  if (err.statusCode === undefined) {
-    const { statusCode = 500, message } = err;
+//   if (err.statusCode === undefined) {
+//     const { statusCode = 500, message } = err;
 
-    res
-      .status(statusCode)
-      .send({
-        message: statusCode === 500
-          ? 'На сервере произошла ошибка'
-          : message,
-      });
-  }
-});
+//     res
+//       .status(statusCode)
+//       .send({
+//         message: statusCode === 500
+//           ? 'На сервере произошла ошибка'
+//           : message,
+//       });
+//   }
+// });
 
 app.listen(PORT);
