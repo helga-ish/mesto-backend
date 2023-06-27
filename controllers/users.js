@@ -1,5 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+// const { ValidationError } = require('../components/ValidationError.js');
+// const { NotFoundError } = require('../components/NotFoundError');
+// const { DefaultError } = require('../components/DefaultError.js');
+// const { UnauthorizedError } = require('../components/UnauthorizedError.js');
 
 const User = require('../models/user');
 const {
