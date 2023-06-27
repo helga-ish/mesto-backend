@@ -6,6 +6,7 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   DEFAULT_ERROR,
+  UNAUTHORIZED_ERROR,
 } = require('../constants/constants');
 
 const login = (req, res) => {
@@ -20,8 +21,17 @@ const login = (req, res) => {
       );
       res.send({ token });
     })
-    .catch(() => {
-      res
+    .catch((err) => {
+      if (err.name === 'UnauthorizedError') {
+        res
+          .status(UNAUTHORIZED_ERROR)
+          .send({ message: 'Пользователя не существует.' });
+      } else if (err.name === 'ValidationError') {
+        res
+          .status(BAD_REQUEST_ERROR)
+          .send({ message: 'Переданы некорректные данные при поиске пользователя.' });
+      }
+      return res
         .status(NOT_FOUND_ERROR)
         .send({ message: 'Пользователь не найден.' });
     });
@@ -62,7 +72,7 @@ const createUser = (req, res) => {
       email: req.body.email,
       password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
