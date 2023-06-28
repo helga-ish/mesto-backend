@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../components/NotFoundError');
-const UnauthorizedError = require('../components/UnauthorizedError');
+// const UnauthorizedError = require('../components/UnauthorizedError');
 
 const User = require('../models/user');
 const {
@@ -14,7 +14,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .orFail(() => new UnauthorizedError('Пользователя не существует.'))
+    .orFail()
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
