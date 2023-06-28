@@ -101,20 +101,6 @@ const updateProfile = (req, res, next) => {
     .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'ValidationError') {
-    //     res
-    //       .status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при обновлении профиля.' });
-    //   } else if (err.name === 'DocumentNotFoundError') {
-    //     return res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Пользователь по указанному _id не найден.' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 const updateAvatar = (req, res, next) => {
