@@ -8,21 +8,30 @@ const {
   BAD_REQUEST_ERROR,
   DEFAULT_ERROR,
   CONFLICT_ERROR,
+  UNAUTHORIZED_ERROR,
 } = require('../constants/constants');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' },
-      );
-      res.send({ token });
+    .then(() => {
+      User.findOne(
+        {
+          $or: [{ email: req.body.email }, { password: req.body.password }],
+        },
+      )
+        .then((user) => {
+          const token = jwt.sign(
+            { _id: user._id },
+            'some-secret-key',
+            { expiresIn: '7d' },
+          );
+          res.send({ token });
+        })
+        .catch(next);
     })
-    .catch(next);
+    .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
 };
 
 const getUsers = (req, res) => {
