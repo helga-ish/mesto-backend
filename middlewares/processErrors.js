@@ -68,3 +68,5 @@ const processErrors = (err, req, res, next) => {
 };
 
 module.exports = processErrors;
+
+// Авторизация с несуществующими email и password в БД - код ответа 401

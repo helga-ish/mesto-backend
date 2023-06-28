@@ -13,6 +13,7 @@ const {
   UNAUTHORIZED_ERROR,
   CONFLICT_ERROR,
 } = require('../constants/constants');
+const NotFoundError = require('../components/NotFoundError');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -53,9 +54,16 @@ const getUsers = (req, res) => {
     .catch(() => res.status(DEFAULT_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }));
 };
 
-const getUserById = (req, res) => {
-  User.findById(req.params.id)
+const getMe = (req, res, next) => {
+  User.findById(req.user._id)
     .orFail()
+    .then((user) => res.status(200).send({ data: user }))
+    .catch(next);
+};
+
+const getUserById = (req, res, next) => {
+  User.findById(req.params.id)
+    .orFail(() => new NotFoundError('Not found'))
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
     // .catch((err) => {
@@ -217,6 +225,7 @@ const updateAvatar = (req, res, next) => {
 module.exports = {
   login,
   getUsers,
+  getMe,
   getUserById,
   createUser,
   updateProfile,
