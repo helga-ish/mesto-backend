@@ -8,6 +8,8 @@ const {
   createUser,
 } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const processErrors = require('./middlewares/processErrors');
+const { NotFoundError } = require('./components/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -19,24 +21,30 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
     about: Joi.string().min(2).max(30).default('Исследователь'),
-    avatar: Joi.string().default('https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'),
+    avatar: Joi.string().pattern(/https?:\/\/(www\.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]/).default('https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'),
   }).unknown(true),
 }), createUser);
 
 app.use('/', auth, require('./routes/users'));
 app.use('/', auth, require('./routes/cards'));
 
-app.use(errors);
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена.' });
-});
+app.use('*', (req, res, next) => next(new NotFoundError('Страница не найдена.')));
+
+app.use(errors());
+app.use(processErrors);
 
 // app.use((err, req, res, next) => {
 //   res.status(err.statusCode).send({ message: err.message });
