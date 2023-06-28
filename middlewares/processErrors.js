@@ -21,7 +21,7 @@ const processErrors = (err, req, res, next) => {
   } else if (UnauthorizedError) {
     res
       .status(UNAUTHORIZED_ERROR)
-      .send({ message: 'Необходима авторизация в эрроре.' });
+      .send({ message: 'Необходима авторизация.' });
   } else if (err.statusCode === FORBIDDEN_ERROR) {
     res
       .status(FORBIDDEN_ERROR)

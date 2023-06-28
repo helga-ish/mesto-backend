@@ -31,7 +31,7 @@ const putLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    // .orFail()
+    .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
 };
@@ -42,7 +42,7 @@ const deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    // .orFail()
+    .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
 };
