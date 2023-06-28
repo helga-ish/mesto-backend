@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const {
-  DEFAULT_ERROR,
+  DEFAULT_ERROR, NOT_FOUND_ERROR,
 } = require('../constants/constants');
 
 const getCards = (req, res) => {
@@ -26,25 +26,33 @@ const deleteCard = (req, res, next) => {
 };
 
 const putLike = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
+  Card.findOne({ _id: req.params.cardId })
     .orFail()
-    .then((card) => res.status(200).send({ data: card }))
-    .catch(next);
+    .then(() => {
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      )
+        .then((card) => res.status(200).send({ data: card }))
+        .catch(next);
+    })
+    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 const deleteLike = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
+  Card.findOne({ _id: req.params.cardId })
     .orFail()
-    .then((card) => res.status(200).send({ data: card }))
-    .catch(next);
+    .then(() => {
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $pull: { likes: req.user._id } },
+        { new: true },
+      )
+        .then((card) => res.status(200).send({ data: card }))
+        .catch(next);
+    })
+    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 module.exports = {
