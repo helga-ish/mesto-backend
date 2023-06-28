@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {
-  celebrate, Joi, errors, Segments,
+  celebrate,
+  Joi,
+  errors,
 } = require('celebrate');
 
 const {
@@ -40,11 +42,6 @@ app.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 
-// app.use(celebrate({
-//   [Segments.HEADERS]: Joi.object({
-//     token: Joi.string().required(),
-//   }).unknown(),
-// }));
 app.use('/', auth, require('./routes/users'));
 app.use('/', auth, require('./routes/cards'));
 

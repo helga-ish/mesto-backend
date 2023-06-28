@@ -2,7 +2,6 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   UNAUTHORIZED_ERROR,
-  FORBIDDEN_ERROR,
   CONFLICT_ERROR,
 } = require('../constants/constants');
 const ValidationError = require('../components/ValidationError');
@@ -22,10 +21,6 @@ const processErrors = (err, req, res, next) => {
     res
       .status(UNAUTHORIZED_ERROR)
       .send({ message: 'Необходима авторизация.' });
-  } else if (err.statusCode === FORBIDDEN_ERROR) {
-    res
-      .status(FORBIDDEN_ERROR)
-      .send({ message: 'Нет доступа.' });
   } else if (err.code === 11000) {
     res
       .status(CONFLICT_ERROR)
@@ -41,8 +36,7 @@ const processErrors = (err, req, res, next) => {
           : message,
       });
   }
+  return next;
 };
 
 module.exports = processErrors;
-
-// Авторизация с несуществующими email и password в БД - код ответа 401

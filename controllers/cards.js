@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const {
-  DEFAULT_ERROR, NOT_FOUND_ERROR,
+  DEFAULT_ERROR, NOT_FOUND_ERROR, FORBIDDEN_ERROR,
 } = require('../constants/constants');
 
 const getCards = (req, res) => {
@@ -19,10 +19,19 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId, { select: req.owner === req.user._id })
-    // .orFail()
-    .then((card) => res.status(200).send({ data: card }))
-    .catch(next);
+  Card.findOne({ _id: req.params.cardId })
+    .orFail()
+    .then(() => {
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((card) => {
+          if (req.owner === req.user._id) {
+            res.status(200).send({ data: card });
+          }
+          return next();
+        })
+        .catch(() => res.status(FORBIDDEN_ERROR).send({ message: 'Нет доступа.' }));
+    })
+    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 const putLike = (req, res, next) => {
