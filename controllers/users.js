@@ -1,19 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const { ValidationError } = require('../components/ValidationError.js');
-// const { NotFoundError } = require('../components/NotFoundError');
-// const { DefaultError } = require('../components/DefaultError.js');
-// const { UnauthorizedError } = require('../components/UnauthorizedError.js');
+// const ValidationError = require('../components/ValidationError');
+const NotFoundError = require('../components/NotFoundError');
+// const UnauthorizedError = require('../components/UnauthorizedError');
 
 const User = require('../models/user');
 const {
   BAD_REQUEST_ERROR,
-  NOT_FOUND_ERROR,
   DEFAULT_ERROR,
-  UNAUTHORIZED_ERROR,
   CONFLICT_ERROR,
 } = require('../constants/constants');
-const NotFoundError = require('../components/NotFoundError');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -28,24 +24,6 @@ const login = (req, res, next) => {
       res.send({ token });
     })
     .catch(next);
-    // {
-    //   if (err.code === 401) {
-    //     res
-    //       .status(UNAUTHORIZED_ERROR)
-    //       .send({ message: 'Пользователя не существует.' });
-    //   } else if (err.name === 'ValidationError') {
-    //     res
-    //       .status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при поиске пользователя.' });
-    //   } else if (err.name === 'DocumentNotFoundError') {
-    //     return res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Пользователь не найден.' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 const getUsers = (req, res) => {
