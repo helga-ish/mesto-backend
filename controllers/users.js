@@ -14,7 +14,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .orFail()
+    // .orFail()
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
@@ -34,14 +34,14 @@ const getUsers = (req, res) => {
 
 const getMe = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => new NotFoundError('Not found'))
+    // .orFail(() => new NotFoundError('Not found'))
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
 
 const getUserById = (req, res, next) => {
   User.findById(req.params.id)
-    .orFail(() => new NotFoundError('Not found'))
+    // .orFail(() => new NotFoundError('Not found'))
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
@@ -96,7 +96,7 @@ const updateProfile = (req, res, next) => {
       runValidators: true,
     },
   )
-    .orFail()
+    // .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
@@ -114,7 +114,7 @@ const updateAvatar = (req, res, next) => {
       runValidators: true,
     },
   )
-    .orFail()
+    // .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };

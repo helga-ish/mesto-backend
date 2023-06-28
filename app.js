@@ -40,11 +40,11 @@ app.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 
-app.use(celebrate({
-  [Segments.HEADERS]: Joi.object({
-    token: Joi.string().required(),
-  }).unknown(),
-}));
+// app.use(celebrate({
+//   [Segments.HEADERS]: Joi.object({
+//     token: Joi.string().required(),
+//   }).unknown(),
+// }));
 app.use('/', auth, require('./routes/users'));
 app.use('/', auth, require('./routes/cards'));
 
