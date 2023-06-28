@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const ValidationError = require('../components/ValidationError');
 const NotFoundError = require('../components/NotFoundError');
 const UnauthorizedError = require('../components/UnauthorizedError');
 
@@ -82,7 +81,6 @@ const createUser = (req, res, next) => {
         });
     })
     .catch(next);
-    // .catch(() => res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя.' }));
 };
 
 const updateProfile = (req, res, next) => {
