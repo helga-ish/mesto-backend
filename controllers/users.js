@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // const ValidationError = require('../components/ValidationError');
 const NotFoundError = require('../components/NotFoundError');
-// const UnauthorizedError = require('../components/UnauthorizedError');
+const UnauthorizedError = require('../components/UnauthorizedError');
 
 const User = require('../models/user');
 const {
@@ -15,6 +15,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
+    .orFail(() => new UnauthorizedError('Пользователя не существует.'))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
@@ -34,7 +35,7 @@ const getUsers = (req, res) => {
 
 const getMe = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail()
+    .orFail(() => new NotFoundError('Not found'))
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
@@ -44,61 +45,9 @@ const getUserById = (req, res, next) => {
     .orFail(() => new NotFoundError('Not found'))
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'DocumentNotFoundError') {
-    //     res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Пользователь по указанному _id не найден.' });
-    //   } else if (err.name === 'CastError') {
-    //     return res
-    //       .status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при поиске пользователя.' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 const createUser = (req, res, next) => {
-  // const {
-  //   email, password, name, about, avatar,
-  // } = req.body;
-
-  // User.create({
-  //   email, password, name, about, avatar,
-  // })
-  // bcrypt.hash(req.body.password, 10)
-  //   .then((hash) => User.create(
-  //     {
-  //       email: req.body.email,
-  //       password: hash,
-  //       name: req.body.name,
-  //       about: req.body.about,
-  //       avatar: req.body.avatar,
-  //     },
-  //   ))
-  //   .then((user) => res.send({
-  //     _id: user._id,
-  //     email: user.email,
-  //     name: user.name,
-  //     about: user.about,
-  //     avatar: user.avatar,
-  //   }))
-  //   .catch((err) => {
-  //     if (err.code === 11000) {
-  //       res
-  //         .status(CONFLICT_ERROR)
-  //         .send({ message: 'Пользователь с таким email уже существует.' });
-  //     } else if (err.name === 'ValidationError') {
-  //       return res
-  //         .status(BAD_REQUEST_ERROR)
-  //         .send({ message: 'Переданы некорректные данные при создании пользователя.' });
-  //     }
-  //     return res
-  //       .status(DEFAULT_ERROR)
-  //       .send({ message: 'На сервере произошла ошибка.' });
-  //   });
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       User.create(
@@ -184,20 +133,6 @@ const updateAvatar = (req, res, next) => {
     .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'DocumentNotFoundError') {
-    //     res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Пользователь по указанному _id не найден.' });
-    //   } else if (err.name === 'ValidationError') {
-    //     return res
-    //       .status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 module.exports = {

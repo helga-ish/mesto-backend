@@ -16,15 +16,6 @@ const createCard = (req, res, next) => {
   Card.create({ name, link, owner })
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'ValidationError') {
-    //     res.status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при создании карточки.' });
-    //   } else {
-    //     res.status(DEFAULT_ERROR)
-    //       .send({ message: 'На сервере произошла ошибка' });
-    //   }
-    // });
 };
 
 const deleteCard = (req, res, next) => {
@@ -32,24 +23,6 @@ const deleteCard = (req, res, next) => {
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.code === 403) {
-    //     res
-    //       .status(FORBIDDEN_ERROR)
-    //       .send({ message: 'У Вас нет доступа.' });
-    //   } else if (err.name === 'DocumentNotFoundError') {
-    //     res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Карточка с указанным _id не найдена.' });
-    //   } else if (err.name === 'CastError') {
-    //     return res
-    //       .status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные при поиске карточки.' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 const putLike = (req, res, next) => {
@@ -61,19 +34,6 @@ const putLike = (req, res, next) => {
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'DocumentNotFoundError') {
-    //     res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Передан несуществующий _id карточки.' });
-    //   } else if (err.name === 'CastError') {
-    //     res.status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные для постановки лайка. ' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 const deleteLike = (req, res, next) => {
@@ -85,19 +45,6 @@ const deleteLike = (req, res, next) => {
     .orFail()
     .then((card) => res.status(200).send({ data: card }))
     .catch(next);
-    // .catch((err) => {
-    //   if (err.name === 'DocumentNotFoundError') {
-    //     res
-    //       .status(NOT_FOUND_ERROR)
-    //       .send({ message: 'Передан несуществующий _id карточки.' });
-    //   } else if (err.name === 'CastError') {
-    //     res.status(BAD_REQUEST_ERROR)
-    //       .send({ message: 'Переданы некорректные данные для снятия лайка. ' });
-    //   }
-    //   return res
-    //     .status(DEFAULT_ERROR)
-    //     .send({ message: 'На сервере произошла ошибка' });
-    // });
 };
 
 module.exports = {
