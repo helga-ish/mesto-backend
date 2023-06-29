@@ -91,20 +91,6 @@ const createUser = (req, res, next) => {
           return next();
         })
         .catch(next);
-        // .catch((err) => {
-        //   if (err.code === 11000) {
-        //     res
-        //       .status(CONFLICT_ERROR)
-        //       .send({ message: 'Пользователь с таким email уже существует.' });
-        //   } else if (err.name === 'ValidationError') {
-        //     return res
-        //       .status(BAD_REQUEST_ERROR)
-        //       .send({ message: 'Переданы некорректные данные при создании пользователя.' });
-        //   }
-        //   return res
-        //     .status(DEFAULT_ERROR)
-        //     .send({ message: 'На сервере произошла ошибка.' });
-        // });
     })
     .catch(next);
 };
