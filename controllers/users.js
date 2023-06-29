@@ -9,7 +9,7 @@ const {
 //   // DEFAULT_ERROR,
 //   // CONFLICT_ERROR,
   UNAUTHORIZED_ERROR,
-//   // NOT_FOUND_ERROR,
+  NOT_FOUND_ERROR,
 } = require('../constants/constants');
 
 const login = (req, res, next) => {
@@ -60,9 +60,7 @@ const getUserById = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => new NotFoundError('Пользователь не найден'))
-    .catch(next);
-  // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
+    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
 };
 
 const createUser = (req, res, next) => {
