@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const {
-  BAD_REQUEST_ERROR,
-  DEFAULT_ERROR,
-  CONFLICT_ERROR,
-  UNAUTHORIZED_ERROR,
-  NOT_FOUND_ERROR,
+  // BAD_REQUEST_ERROR,
+  // DEFAULT_ERROR,
+  // CONFLICT_ERROR,
+  // UNAUTHORIZED_ERROR,
+  // NOT_FOUND_ERROR,
 } = require('../constants/constants');
+const UnauthorizedError = require('../components/UnauthorizedError');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -30,13 +31,13 @@ const login = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
+    .catch(() => new UnauthorizedError({ message: 'Такого пользователя не существует.' }));
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(DEFAULT_ERROR).send({ message: 'Запрашиваемый пользователь не найден' }));
+    .catch(next);
 };
 
 const getMe = (req, res, next) => {
@@ -58,7 +59,8 @@ const getUserById = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
+    .catch(next);
+  // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
 };
 
 const createUser = (req, res, next) => {
@@ -80,20 +82,21 @@ const createUser = (req, res, next) => {
           about: user.about,
           avatar: user.avatar,
         }))
-        .catch((err) => {
-          if (err.code === 11000) {
-            res
-              .status(CONFLICT_ERROR)
-              .send({ message: 'Пользователь с таким email уже существует.' });
-          } else if (err.name === 'ValidationError') {
-            return res
-              .status(BAD_REQUEST_ERROR)
-              .send({ message: 'Переданы некорректные данные при создании пользователя.' });
-          }
-          return res
-            .status(DEFAULT_ERROR)
-            .send({ message: 'На сервере произошла ошибка.' });
-        });
+        .catch(next);
+        // .catch((err) => {
+        //   if (err.code === 11000) {
+        //     res
+        //       .status(CONFLICT_ERROR)
+        //       .send({ message: 'Пользователя с таким email уже существует.' });
+        //   } else if (err.name === 'ValidationError') {
+        //     return res
+        //       .status(BAD_REQUEST_ERROR)
+        //       .send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        //   }
+        //   return res
+        //     .status(DEFAULT_ERROR)
+        //     .send({ message: 'На сервере произошла ошибка.' });
+        // });
     })
     .catch(next);
 };
@@ -111,7 +114,6 @@ const updateProfile = (req, res, next) => {
       runValidators: true,
     },
   )
-    // .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
@@ -129,7 +131,6 @@ const updateAvatar = (req, res, next) => {
       runValidators: true,
     },
   )
-    // .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
