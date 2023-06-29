@@ -20,16 +20,13 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findOne({ _id: req.params.cardId })
-    .orFail()
-    .then(() => {
-      Card.findByIdAndRemove(req.params.cardId)
-        .then((card) => {
-          if (req.owner === req.user._id) {
-            res.status(200).send({ data: card });
-          }
-          return next();
-        })
-        .catch(() => res.status(FORBIDDEN_ERROR).send({ message: 'Нет доступа.' }));
+    .then((card) => {
+      if (card.owner.toString() !== req.user._id) {
+        return res.status(FORBIDDEN_ERROR).send({ message: 'Нет доступа.' });
+      }
+      return Card.findByIdAndRemove(req.params.cardId)
+        .then(() => res.status(200).send({ data: card }))
+        .catch(next);
     })
     .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };

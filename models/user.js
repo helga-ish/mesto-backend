@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../components/UnauthorizedError');
 
@@ -20,9 +19,6 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    validate: {
-      validator: (v) => validator.isURL(v),
-    },
   },
 });
 
