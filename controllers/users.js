@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const NotFoundError = require('../components/NotFoundError');
+const UnauthorizedError = require('../components/UnauthorizedError');
+const { CONFLICT_ERROR } = require('../constants/constants');
 // const {
 //   // BAD_REQUEST_ERROR,
 //   // DEFAULT_ERROR,
@@ -30,6 +33,7 @@ const login = (req, res, next) => {
         })
         .catch(next);
     })
+    .catch(() => new UnauthorizedError('Такого пользователя не существует.'))
     .catch(next);
     // .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
 };
@@ -59,6 +63,7 @@ const getUserById = (req, res, next) => {
         })
         .catch(next);
     })
+    .catch(() => new NotFoundError('Пользователь не найден'))
     .catch(next);
   // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
 };
@@ -82,12 +87,20 @@ const createUser = (req, res, next) => {
           about: user.about,
           avatar: user.avatar,
         }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            res
+              .status(CONFLICT_ERROR)
+              .send({ message: 'Пользователь с таким email уже существует.' });
+          }
+          return next();
+        })
         .catch(next);
         // .catch((err) => {
         //   if (err.code === 11000) {
         //     res
         //       .status(CONFLICT_ERROR)
-        //       .send({ message: 'Пользователя с таким email уже существует.' });
+        //       .send({ message: 'Пользователь с таким email уже существует.' });
         //   } else if (err.name === 'ValidationError') {
         //     return res
         //       .status(BAD_REQUEST_ERROR)
