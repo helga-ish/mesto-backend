@@ -2,14 +2,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const {
-  // BAD_REQUEST_ERROR,
-  // DEFAULT_ERROR,
-  // CONFLICT_ERROR,
-  // UNAUTHORIZED_ERROR,
-  // NOT_FOUND_ERROR,
-} = require('../constants/constants');
-const UnauthorizedError = require('../components/UnauthorizedError');
+// const {
+//   // BAD_REQUEST_ERROR,
+//   // DEFAULT_ERROR,
+//   // CONFLICT_ERROR,
+//   // UNAUTHORIZED_ERROR,
+//   // NOT_FOUND_ERROR,
+// } = require('../constants/constants');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -31,7 +30,8 @@ const login = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => new UnauthorizedError({ message: 'Такого пользователя не существует.' }));
+    .catch(next);
+    // .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
 };
 
 const getUsers = (req, res, next) => {
