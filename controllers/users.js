@@ -3,15 +3,14 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const NotFoundError = require('../components/NotFoundError');
-const UnauthorizedError = require('../components/UnauthorizedError');
 const { CONFLICT_ERROR } = require('../constants/constants');
-// const {
+const {
 //   // BAD_REQUEST_ERROR,
 //   // DEFAULT_ERROR,
 //   // CONFLICT_ERROR,
-//   // UNAUTHORIZED_ERROR,
+  UNAUTHORIZED_ERROR,
 //   // NOT_FOUND_ERROR,
-// } = require('../constants/constants');
+} = require('../constants/constants');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -33,9 +32,7 @@ const login = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => new UnauthorizedError('Такого пользователя не существует.'))
-    .catch(next);
-    // .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
+    .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
 };
 
 const getUsers = (req, res, next) => {
