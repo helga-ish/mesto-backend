@@ -44,7 +44,7 @@ const putLike = (req, res, next) => {
         .then((card) => res.status(200).send({ data: card }))
         .catch(next);
     })
-    catch(next);
+    .catch(next);
     // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
