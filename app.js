@@ -45,12 +45,6 @@ app.post('/signup', celebrate({
 app.use('/', auth, require('./routes/users'));
 app.use('/', auth, require('./routes/cards'));
 
-// app.use('*', (req, res, next) => {
-//   const error = new NotFoundError('Страница не найдена.');
-//   res.status(error.statusCode).send({ message: error.message });
-//   return next();
-// });
-
 app.use('*', (req, res, next) => next(new NotFoundError()));
 
 app.use(errors());

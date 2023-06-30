@@ -1,9 +1,4 @@
-const {
-  // BAD_REQUEST_ERROR,
-  // NOT_FOUND_ERROR,
-  // UNAUTHORIZED_ERROR,
-  CONFLICT_ERROR,
-} = require('../constants/constants');
+const { CONFLICT_ERROR } = require('../constants/constants');
 const ValidationError = require('../components/ValidationError');
 const NotFoundError = require('../components/NotFoundError');
 const UnauthorizedError = require('../components/UnauthorizedError');
