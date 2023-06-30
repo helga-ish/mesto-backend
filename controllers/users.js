@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const NotFoundError = require('../components/NotFoundError');
 // const { CONFLICT_ERROR } = require('../constants/constants');
 // const {
 //   UNAUTHORIZED_ERROR,
@@ -57,8 +58,7 @@ const getUserById = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(next);
-    // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
+    .catch(() => next(new NotFoundError('Пользователь не найден.')));
 };
 
 const createUser = (req, res, next) => {

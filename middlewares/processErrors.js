@@ -7,6 +7,7 @@ const {
 const ValidationError = require('../components/ValidationError');
 const NotFoundError = require('../components/NotFoundError');
 const UnauthorizedError = require('../components/UnauthorizedError');
+const ForbiddenError = require('../components/ForbiddenError');
 
 const processErrors = (err, req, res, next) => {
   if (err.name === 'ValidationError') {
@@ -21,6 +22,11 @@ const processErrors = (err, req, res, next) => {
       .send({ message: error.message });
   } else if (err.name === 'UnauthorizedError') {
     const error = new UnauthorizedError('Необходима авторизация.');
+    res
+      .status(error.statusCode)
+      .send({ message: error.message });
+  } else if (err.name === 'ForbiddenError') {
+    const error = new ForbiddenError('Нет доступа.');
     res
       .status(error.statusCode)
       .send({ message: error.message });

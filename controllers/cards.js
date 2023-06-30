@@ -1,7 +1,8 @@
 const Card = require('../models/card');
-const {
-  NOT_FOUND_ERROR, FORBIDDEN_ERROR,
-} = require('../constants/constants');
+// const {
+//   NOT_FOUND_ERROR, FORBIDDEN_ERROR,
+// } = require('../constants/constants');
+const ForbiddenError = require('../components/ForbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -22,13 +23,15 @@ const deleteCard = (req, res, next) => {
   Card.findOne({ _id: req.params.cardId })
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        return res.status(FORBIDDEN_ERROR).send({ message: 'Нет доступа.' });
+        return next(new ForbiddenError());
+        // return res.status(FORBIDDEN_ERROR).send({ message: 'Нет доступа.' });
       }
       return Card.findByIdAndRemove(req.params.cardId)
         .then(() => res.status(200).send({ data: card }))
         .catch(next);
     })
-    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
+    .catch(next);
+    // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 const putLike = (req, res, next) => {
@@ -43,7 +46,8 @@ const putLike = (req, res, next) => {
         .then((card) => res.status(200).send({ data: card }))
         .catch(next);
     })
-    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
+    .catch(next);
+    // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 const deleteLike = (req, res, next) => {
@@ -58,7 +62,8 @@ const deleteLike = (req, res, next) => {
         .then((card) => res.status(200).send({ data: card }))
         .catch(next);
     })
-    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
+    .catch(next);
+    // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена.' }));
 };
 
 module.exports = {
