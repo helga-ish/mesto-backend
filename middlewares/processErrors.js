@@ -1,7 +1,7 @@
 const {
-  BAD_REQUEST_ERROR,
-  NOT_FOUND_ERROR,
-  UNAUTHORIZED_ERROR,
+  // BAD_REQUEST_ERROR,
+  // NOT_FOUND_ERROR,
+  // UNAUTHORIZED_ERROR,
   CONFLICT_ERROR,
 } = require('../constants/constants');
 const ValidationError = require('../components/ValidationError');
@@ -9,18 +9,21 @@ const NotFoundError = require('../components/NotFoundError');
 const UnauthorizedError = require('../components/UnauthorizedError');
 
 const processErrors = (err, req, res, next) => {
-  if (ValidationError) {
+  if (err.name === 'ValidationError') {
+    const error = new ValidationError('Переданы некорректные данные.');
     res
-      .status(BAD_REQUEST_ERROR)
-      .send({ message: 'Переданы некорректные данные.' });
-  } else if (NotFoundError) {
+      .status(error.statusCode)
+      .send({ message: error.message });
+  } else if (err.name === 'NotFoundError') {
+    const error = new NotFoundError('Страница не найдена.');
     res
-      .status(NOT_FOUND_ERROR)
-      .send({ message: 'Страница не найдена.' });
-  } else if (UnauthorizedError) {
+      .status(error.statusCode)
+      .send({ message: error.message });
+  } else if (err.name === 'UnauthorizedError') {
+    const error = new UnauthorizedError('Необходима авторизация.');
     res
-      .status(UNAUTHORIZED_ERROR)
-      .send({ message: 'Необходима авторизация.' });
+      .status(error.statusCode)
+      .send({ message: error.message });
   } else if (err.code === 11000) {
     res
       .status(CONFLICT_ERROR)

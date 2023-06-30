@@ -2,15 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const NotFoundError = require('../components/NotFoundError');
-const { CONFLICT_ERROR } = require('../constants/constants');
-const {
-//   // BAD_REQUEST_ERROR,
-//   // DEFAULT_ERROR,
-//   // CONFLICT_ERROR,
-  UNAUTHORIZED_ERROR,
-  NOT_FOUND_ERROR,
-} = require('../constants/constants');
+// const { CONFLICT_ERROR } = require('../constants/constants');
+// const {
+//   UNAUTHORIZED_ERROR,
+//   NOT_FOUND_ERROR,
+// } = require('../constants/constants');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -32,7 +28,8 @@ const login = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
+    .catch(next);
+    // .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Такого пользователя не существует.' }));
 };
 
 const getUsers = (req, res, next) => {
@@ -60,7 +57,8 @@ const getUserById = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
+    .catch(next);
+    // .catch(() => res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь не найден.' }));
 };
 
 const createUser = (req, res, next) => {
@@ -82,14 +80,14 @@ const createUser = (req, res, next) => {
           about: user.about,
           avatar: user.avatar,
         }))
-        .catch((err) => {
-          if (err.code === 11000) {
-            res
-              .status(CONFLICT_ERROR)
-              .send({ message: 'Пользователь с таким email уже существует.' });
-          }
-          return next();
-        })
+        // .catch((err) => {
+        //   if (err.code === 11000) {
+        //     res
+        //       .status(CONFLICT_ERROR)
+        //       .send({ message: 'Пользователь с таким email уже существует.' });
+        //   }
+        //   return next();
+        // })
         .catch(next);
     })
     .catch(next);
