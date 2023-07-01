@@ -4,7 +4,7 @@ const validator = require('validator');
 // const isEmail = require('validator/lib/isEmail');
 const UnauthorizedError = require('../components/UnauthorizedError');
 
-const urlRegEx = /(^https?:\/\/)?(www\.)?[a-z0-9~_\-.]+\.[a-z]{2,9}(\/|:|\?[!-~]*)?$/i;
+const urlRegEx = /(^https?:\/\/)?(www\.)?[a-z0-9~_\-.]+\.[a-z]{2,9}([!-~]*)?$/i;
 
 const userSchema = new mongoose.Schema({
   email: {
