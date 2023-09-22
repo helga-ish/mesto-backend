@@ -1,4 +1,4 @@
-# Bsckend проекта Mesto
+# Backend проекта Mesto
 
 ## Ссылка на проект
 
